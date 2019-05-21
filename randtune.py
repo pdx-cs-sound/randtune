@@ -35,9 +35,21 @@ def gen_white(obj, note_base, note_range):
         return random.randint(self.note_base, self.note_base + self.note_range)
     return gen
 
+def gen_gauss(obj, note_base, note_range, note_stddev):
+    obj.note_base = int(note_base)
+    obj.note_range = int(note_range)
+    obj.note_stddev = int(note_stddev)
+    def gen(self):
+        while True:
+            note = int(random.gauss(self.note_range // 2, self.note_stddev)) + self.note_base
+            if (note >= self.note_base) and (note <= self.note_base + self.note_range):
+                return note
+    return gen
+
 generators = [
     ("silence", gen_silence),
     ("white", gen_white),
+    ("gauss", gen_gauss),
 ]
 
 class Tunegen(object):
