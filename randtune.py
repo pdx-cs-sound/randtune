@@ -8,16 +8,41 @@ import mido
 import random
 import sys
 import time
+import argparse
+
+parser = argparse.ArgumentParser(description='Play a random tune.')
+parser.add_argument('gen_args', metavar='N', type=str, nargs='+',
+                    help='argument to generator')
+parser.add_argument('--root', dest='root', type = int, default=60,
+                    help='root note of scale (default: 60)')
+parser.add_argument('--tempo', dest='tempo', type = float, default=120,
+                    help='tempo in bpm (default: 120)')
+parser.add_argument('--synth', dest='synth', type = str, default=None,
+                    help='synthesizer port')
+parser.add_argument('--scale', dest='scale', type = str, default=None,
+                    help='scale type')
+
+args = parser.parse_args()
 
 # MIDI random tune generator
 
-# Synthesizer port.
-synth = sys.argv[1]
-sys.argv = sys.argv[1:]
+if args.scale == "major":
+    scale = [0, 2, 4, 5, 7, 9, 11]
+elif args.scale == "minor":
+    scale = [0, 2, 3, 5, 7, 9, 10]
+elif args.scale == None:
+    scale = list(range(12))
+else:
+    assert False
 
-# Note duration.
-duration = 60.0/float(sys.argv[1])
-sys.argv = sys.argv[1:]
+# Synthesizer port.
+synth = args.synth
+assert synth != None
+
+# Beats per minute.
+duration = 60.0/args.tempo
+
+# Root note.
 
 import mido
 import random
@@ -61,8 +86,8 @@ class Tunegen(object):
 
         # Create the tune generator.
         for name, fun in generators:
-            if name == sys.argv[1]:
-                self.gen = fun(self, *sys.argv[2:])
+            if name == args.gen_args[0]:
+                self.gen = fun(self, *args.gen_args[1:])
                 return
         assert False
     
