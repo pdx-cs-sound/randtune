@@ -43,6 +43,7 @@ assert synth != None
 duration = 60.0/args.tempo
 
 # Root note.
+root = args.root
 
 import mido
 import random
@@ -92,6 +93,7 @@ class Tunegen(object):
         assert False
     
     def play(self):
+        nscale = len(scale)
         while True:
             note = self.gen(self)
             if note == None:
@@ -99,10 +101,13 @@ class Tunegen(object):
                     msg = mido.Message('note_off', note=note)
                     self.outport.send(msg)
                 break
-            msg = mido.Message('note_on', note=note)
+            octave = note // nscale
+            key = note % nscale
+            mkey = octave * nscale + root + scale[key]
+            msg = mido.Message('note_on', note=mkey)
             self.outport.send(msg)
             time.sleep(duration)
-            msg = mido.Message('note_off', note=note)
+            msg = mido.Message('note_off', note=mkey)
             self.outport.send(msg)
 
 tunegen = Tunegen()
