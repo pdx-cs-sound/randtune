@@ -54,21 +54,19 @@ def gen_silence(obj):
         return None
     return gen
 
-def gen_white(obj, note_base, note_range):
-    obj.note_base = int(note_base)
+def gen_white(obj, note_range):
     obj.note_range = int(note_range)
     def gen(self):
-        return random.randint(self.note_base, self.note_base + self.note_range)
+        return random.randint(0, self.note_range - 1)
     return gen
 
-def gen_gauss(obj, note_base, note_range, note_stddev):
-    obj.note_base = int(note_base)
+def gen_gauss(obj, note_range, note_stddev):
     obj.note_range = int(note_range)
     obj.note_stddev = int(note_stddev)
     def gen(self):
         while True:
-            note = int(random.gauss(self.note_range // 2, self.note_stddev)) + self.note_base
-            if (note >= self.note_base) and (note <= self.note_base + self.note_range):
+            note = int(random.gauss(self.note_range // 2, self.note_stddev))
+            if (note >= 0) and (note < self.note_range):
                 return note
     return gen
 
