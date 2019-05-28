@@ -17,10 +17,10 @@ parser.add_argument('--root', dest='root', type = int, default=60,
                     help='root note of scale (default: 60)')
 parser.add_argument('--tempo', dest='tempo', type = float, default=120,
                     help='tempo in bpm (default: 120)')
+parser.add_argument('--scale', dest='scale', type = str, default="chromatic",
+                    help='scale type (default: chromatic)')
 parser.add_argument('--synth', dest='synth', type = str, default=None,
                     help='synthesizer port')
-parser.add_argument('--scale', dest='scale', type = str, default=None,
-                    help='scale type')
 
 args = parser.parse_args()
 
@@ -30,7 +30,7 @@ if args.scale == "major":
     scale = [0, 2, 4, 5, 7, 9, 11]
 elif args.scale == "minor":
     scale = [0, 2, 3, 5, 7, 9, 10]
-elif args.scale == None:
+elif args.scale == "chromatic":
     scale = list(range(12))
 else:
     assert False
