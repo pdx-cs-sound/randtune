@@ -32,6 +32,8 @@ elif args.scale == "minor":
     scale = [0, 2, 3, 5, 7, 9, 10]
 elif args.scale == "chromatic":
     scale = list(range(12))
+elif args.scale == "majorchord":
+    scale = [0, 4, 7]
 else:
     assert False
 
@@ -84,6 +86,7 @@ class Tunegen(object):
         assert self.outport != None
 
         # Create the tune generator.
+        print(args.gen_args)
         for name, fun in generators:
             if name == args.gen_args[0]:
                 self.gen = fun(self, *args.gen_args[1:])
@@ -101,7 +104,7 @@ class Tunegen(object):
                 break
             octave = note // nscale
             key = note % nscale
-            mkey = octave * nscale + root + scale[key]
+            mkey = root + octave * scale[key]
             msg = mido.Message('note_on', note=mkey)
             self.outport.send(msg)
             time.sleep(duration)
