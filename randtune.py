@@ -102,9 +102,9 @@ class Tunegen(object):
                     msg = mido.Message('note_off', note=note)
                     self.outport.send(msg)
                 break
-            octave = note // nscale
+            octave = note // nscale - 2
             key = note % nscale
-            mkey = root + octave * scale[key]
+            mkey = root + scale[key] + octave * 12
             msg = mido.Message('note_on', note=mkey)
             self.outport.send(msg)
             time.sleep(duration)
