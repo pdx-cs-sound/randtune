@@ -13,8 +13,8 @@ import argparse
 parser = argparse.ArgumentParser(description='Play a random tune.')
 parser.add_argument('gen_args', metavar='N', type=str, nargs='+',
                     help='argument to generator')
-parser.add_argument('--root', dest='root', type = int, default=60,
-                    help='root note of scale (default: 60)')
+parser.add_argument('--root', dest='root', type = int, default=48,
+                    help='root note of scale (default: 48)')
 parser.add_argument('--tempo', dest='tempo', type = float, default=120,
                     help='tempo in bpm (default: 120)')
 parser.add_argument('--scale', dest='scale', type = str, default="chromatic",
@@ -34,6 +34,8 @@ elif args.scale == "chromatic":
     scale = list(range(12))
 elif args.scale == "majorchord":
     scale = [0, 4, 7]
+elif args.scale == "minorchord":
+    scale = [0, 3, 7]
 else:
     assert False
 
@@ -102,7 +104,7 @@ class Tunegen(object):
                     msg = mido.Message('note_off', note=note)
                     self.outport.send(msg)
                 break
-            octave = note // nscale - 2
+            octave = note // nscale
             key = note % nscale
             mkey = root + scale[key] + octave * 12
             msg = mido.Message('note_on', note=mkey)
